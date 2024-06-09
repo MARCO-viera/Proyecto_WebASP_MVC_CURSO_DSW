@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcServiceGymForce.Protos";
+package producto;
+
+//MÉTODO DE SERVICIO
+service Producto{
+	rpc listadoProducto(Empty) returns (productoListResponse);
+}
+
+
+//DEFINICION DE MENSAJES
+message Empty{}
+
+message productoResponse{
+	int32 id_producto = 1;
+	string nom_prod = 2;
+	string des_prod = 3;
+	string nom_cat = 4;
+	double pre_prod = 5;
+	int32 stock = 6;
+}
+
+message productoListResponse{
+	repeated productoResponse items = 1;
+}
