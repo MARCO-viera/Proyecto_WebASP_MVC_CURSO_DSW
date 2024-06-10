@@ -39,7 +39,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fa-solid fa-cart-shopping"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">BD VENTAS</div>
+                <div class="sidebar-brand-text mx-3">GYMFORCE</div>
             </a>
 
             <!-- Divider -->
@@ -61,45 +61,17 @@
                 Almacén
             </div>
 
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProducto" aria-expanded="true"
-                   aria-controls="collapseTwo">
-                    <i class="fa-solid fa-gift"></i>
-                    <span>Productos</span>
-                </a>
-                <div id="collapseProducto" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="buttons.html">Listado</a>
-                        <a class="collapse-item" href="cards.html">Registrar</a>
-                    </div>
-                </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProveedor" aria-expanded="true"
-                   aria-controls="collapseTwo">
-                    <i class="fa-solid fa-universal-access"></i>
-                    <span>Proveedor</span>
-                </a>
-                <div id="collapseProveedor" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="buttons.html">Listado</a>
-                        <a class="collapse-item" href="cards.html">Registrar</a>
-                    </div>
-                </div>
-            </li>
-
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategoria" aria-expanded="true"
                    aria-controls="collapseTwo">
                     <i class="fa-solid fa-plug"></i>
-                    <span>Vendedor</span>
+                    <span>Producto</span>
                 </a>
                 <div id="collapseCategoria" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="@Url.ActionLink("listadoProductos","Producto")">Listado</a>
                         <a class="collapse-item" href="@Url.ActionLink("nuevoProducto","Producto")">Registrar</a>
+                        <a class="collapse-item" href="@Url.ActionLink("reporteProducto","Producto")">Reporte</a>
                     </div>
                 </div>
             </li>
