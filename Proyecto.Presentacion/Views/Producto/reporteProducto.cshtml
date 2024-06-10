@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Proyecto.Presentacion.Models.Producto>
+
+@{
+    ViewData["Title"] = "reporteProducto";
+    Layout = "~/Views/Shared/_LayoutPrincipal.cshtml";
+}
+
+<h1>Reporte Producto</h1>
+
+<div>
+    <form asp-controller="Producto" asp-action="reporteProducto" method="get">
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" value="@ViewBag.CurrentFilter" />
+        </div>
+        <div>
+            <label for="categoria">Categoría:</label>
+            <input type="text" id="categoria" name="categoria" value="@ViewBag.CurrentFilter" />
+        </div>
+        <div>
+            <label for="stock">Stock:</label>
+            <input type="text" id="stock" name="stock" value="@ViewBag.CurrentFilter" />
+        </div>
+        <div>
+            <button type="submit">Filtrar</button>
+            <button type="submit">Generar EXCEL</button>
+        </div>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.id_producto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nom_prod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.des_prod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nom_cat)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.pre_prod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.stock)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.id_producto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nom_prod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.des_prod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nom_cat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.pre_prod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.stock)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

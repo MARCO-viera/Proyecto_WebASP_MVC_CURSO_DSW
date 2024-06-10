@@ -19,7 +19,45 @@ namespace GymForce_API.Repositorio.DAO
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Producto> listadoProducto()
+
+        //PARA REPORTE
+        public IEnumerable<Producto> reporteProducto(string nombre = null, int? categoria = null, int? stock = null)
+        {
+            List<Producto> aProducto = new List<Producto>();
+            using (SqlConnection cn = new SqlConnection(cadena))
+            {
+                cn.Open();
+                using (SqlCommand cmd = new SqlCommand("SP_REPORTEPRODUCTOS", cn))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                    // Añadir parámetros con valores nulos si no se proporcionan
+                    cmd.Parameters.AddWithValue("@NOMBRE", (object)nombre ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@CATEGORIA", (object)categoria ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@STOCK", (object)stock ?? DBNull.Value);
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            aProducto.Add(new Producto
+                            {
+                                id_producto = dr.GetInt32(dr.GetOrdinal("ID_PRODUCTO")),
+                                nom_prod = dr.GetString(dr.GetOrdinal("NOM_PROD")),
+                                des_prod = dr.GetString(dr.GetOrdinal("DES_PROD")),
+                                nom_cat = dr.GetString(dr.GetOrdinal("NOM_CAT")),
+                                pre_prod = Convert.ToDouble(dr.GetDecimal(dr.GetOrdinal("PRE_PROD"))), // Cambio aquí
+                                stock = dr.GetInt32(dr.GetOrdinal("STOCK")),
+                            });
+                        }
+                    }
+                }
+            }
+            return aProducto;
+        }
+
+    //FIN DE REPORTE
+    public IEnumerable<Producto> listadoProducto()
         {
             List<Producto> aProductos = new List<Producto>();
             SqlConnection cn = new SqlConnection(cadena);
