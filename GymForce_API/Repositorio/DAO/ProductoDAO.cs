@@ -46,7 +46,7 @@ namespace GymForce_API.Repositorio.DAO
                                 nom_prod = dr.GetString(dr.GetOrdinal("NOM_PROD")),
                                 des_prod = dr.GetString(dr.GetOrdinal("DES_PROD")),
                                 nom_cat = dr.GetString(dr.GetOrdinal("NOM_CAT")),
-                                pre_prod = Convert.ToDouble(dr.GetDecimal(dr.GetOrdinal("PRE_PROD"))), // Cambio aquí
+                                pre_prod = Convert.ToDouble(dr.GetDecimal(dr.GetOrdinal("PRE_PROD"))), 
                                 stock = dr.GetInt32(dr.GetOrdinal("STOCK")),
                             });
                         }
