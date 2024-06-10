@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Tables</title>
+    <title>GYMFORCE</title>
 
     <!-- Custom fonts for this template -->
     <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -37,9 +37,9 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fa-solid fa-cart-shopping"></i>
+                    <i class="fa-solid fa-dumbbell"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">BD VENTAS</div>
+                <div class="sidebar-brand-text mx-3">GYMFORCE</div>
             </a>
 
             <!-- Divider -->
@@ -58,7 +58,7 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Almacén
+                Gestión
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -70,8 +70,8 @@
                 </a>
                 <div id="collapseProducto" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="buttons.html">Listado</a>
-                        <a class="collapse-item" href="cards.html">Registrar</a>
+                        <a class="collapse-item" href="@Url.ActionLink("listadoProductos","Producto")">Listado</a>
+                        <a class="collapse-item" href="@Url.ActionLink("nuevoProducto","Producto")">Registrar</a>
                     </div>
                 </div>
             </li>
@@ -80,29 +80,15 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProveedor" aria-expanded="true"
                    aria-controls="collapseTwo">
                     <i class="fa-solid fa-universal-access"></i>
-                    <span>Proveedor</span>
+                    <span>Reporte</span>
                 </a>
                 <div id="collapseProveedor" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="buttons.html">Listado</a>
-                        <a class="collapse-item" href="cards.html">Registrar</a>
+                        <a class="collapse-item" href="@Url.ActionLink("reporteProducto","Producto")">Producto</a>
                     </div>
                 </div>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategoria" aria-expanded="true"
-                   aria-controls="collapseTwo">
-                    <i class="fa-solid fa-plug"></i>
-                    <span>Vendedor</span>
-                </a>
-                <div id="collapseCategoria" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="@Url.ActionLink("listadoProductos","Producto")">Listado</a>
-                        <a class="collapse-item" href="@Url.ActionLink("nuevoProducto","Producto")">Registrar</a>
-                    </div>
-                </div>
-            </li>
             <!-- Divider -->
             <hr class="sidebar-divider">
             <!-- Sidebar Toggler (Sidebar) -->
@@ -370,6 +356,8 @@
 
     <!-- Page level custom scripts -->
     <script src="~/js/demo/datatables-demo.js"></script>
+
+    @RenderSection("Scripts", required: false)
 
 </body>
 

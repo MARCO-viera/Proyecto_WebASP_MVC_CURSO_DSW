@@ -8,6 +8,23 @@ namespace GymForce_API.Controllers
     [ApiController]
     public class ProductoController : Controller
     {
+        [HttpGet("reporteProducto")]
+        public async Task<ActionResult<List<Producto>>> reporteProducto(
+           [FromQuery] string nombre = null,
+           [FromQuery] int? categoria = null,
+           [FromQuery] int? stock = null)
+        {
+            var lista = await Task.Run(() => new ProductoDAO().reporteProducto(nombre, categoria, stock));
+            return Ok(lista);
+        }
+
+        [HttpGet("listadoCategoria")]
+        public async Task<ActionResult<List<Categoria>>> listadoCategoria()
+        {
+            var lista = await Task.Run(() => new CategoriaDAO().listadoCategorias());
+            return Ok(lista);
+        }
+
         [HttpGet("listadoProductos")]
         public async Task<ActionResult<List<Producto>>> listadoProducto()
         {
