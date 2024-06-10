@@ -1,0 +1,142 @@
+﻿@model Proyecto.Presentacion.Models.ProductoO
+
+@{
+    ViewData["Title"] = "Modificar Producto";
+    Layout = "~/Views/Shared/_LayoutPrincipal.cshtml";
+}
+
+<style>
+    .custom-title {
+        background: linear-gradient(to right, #6c757d, #343a40);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+</style>
+
+<h1 class="text-center text-light mb-4 custom-title">Modificar Producto</h1>
+
+<div class="card border-primary mx-auto shadow-lg" style="max-width: 600px;">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Modificar Producto</h4>
+    </div>
+    <div class="card-body bg-light">
+        <form asp-action="modificarProducto">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <input type="hidden" asp-for="id_producto" />
+
+            <!-- Nombre del Producto -->
+            <div class="form-group mb-3">
+                <label asp-for="nom_prod" class="control-label text-primary"></label>
+                <input asp-for="nom_prod" class="form-control border-primary" pattern="[a-zA-ZáéíóúÁÉÍÓÚ\s]+" title="Solo se permiten letras y espacios" required />
+                <span asp-validation-for="nom_prod" class="text-danger"></span>
+            </div>
+
+            <!-- Descripción -->
+            <div class="form-group mb-3">
+                <label asp-for="des_prod" class="control-label text-primary"></label>
+                <input asp-for="des_prod" class="form-control border-primary" required />
+                <span asp-validation-for="des_prod" class="text-danger"></span>
+            </div>
+
+            <!-- Categoría -->
+            <div class="form-group mb-3">
+                <label asp-for="id_categoria" class="control-label text-primary"></label>
+                <div class="input-group">
+                    <select asp-for="id_categoria" class="form-control border-primary" asp-items="ViewBag.categoria"></select>
+                </div>
+                <span asp-validation-for="id_categoria" class="text-danger"></span>
+            </div>
+
+            <!-- Precio -->
+            <div class="form-group mb-3">
+                <label asp-for="pre_prod" class="control-label text-primary"></label>
+                <input asp-for="pre_prod" class="form-control border-primary" type="number" step="any" required />
+                <span asp-validation-for="pre_prod" class="text-danger"></span>
+            </div>
+
+            <!-- Stock -->
+            <div class="form-group mb-3">
+                <label asp-for="stock" class="control-label text-primary"></label>
+                <input asp-for="stock" class="form-control border-primary" type="number" step="1" required />
+                <span asp-validation-for="stock" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Actualizar" class="btn btn-primary w-100" />
+            </div>
+        </form>
+
+        <div class="card-footer text-end">
+            <a asp-action="listadoProductos" class="btn btn-secondary w-100 mt-3">Volver al Listado</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Validar campos al enviar el formulario
+        $(document).ready(function () {
+            $('#modificarProducto').submit(function (e) {
+                // Validar nombre
+                var nombre = $('#nom_prod').val();
+                if (!nombre) {
+                    e.preventDefault(); // Evitar el envío del formulario
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Complete el nombre del producto.'
+                    });
+                } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/.test(nombre)) {
+                    e.preventDefault(); // Evitar el envío del formulario
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Solo se permiten letras y espacios en el nombre.'
+                    });
+                }
+
+                // Validar descripción
+                var descripcion = $('#des_prod').val();
+                if (!descripcion) {
+                    e.preventDefault(); // Evitar el envío del formulario
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Complete la descripción del producto.'
+                    });
+                }
+
+                // Validar precio
+                var precio = parseFloat($('#pre_prod').val());
+                if (precio <= 0 || isNaN(precio)) {
+                    e.preventDefault(); // Evitar el envío del formulario
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'El precio debe ser mayor a 0.'
+                    });
+                } else if (!(/^\d+(\.\d{1,2})?$/.test(precio))) {
+                    e.preventDefault(); // Evitar el envío del formulario
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'El precio debe tener máximo 2 decimales.'
+                    });
+                }
+
+                // Validar stock
+                var stock = parseInt($('#stock').val());
+                if (stock <= 0 || isNaN(stock)) {
+                    e.preventDefault(); // Evitar el envío del formulario
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'El stock debe ser mayor a 0.'
+                    });
+                }
+            });
+        });
+    </script>
+}
