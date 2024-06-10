@@ -20,10 +20,32 @@ namespace Proyecto.Presentacion.Controllers
 
         //PARA REPORTE
         [HttpGet]
-        public IActionResult reporteProducto(string nombre = null, int? categoria = null, int? stock = null)
+        public IActionResult reporteProducto(string nombre = null, int? id_categoria = null, int? stock = null)
         {
             List<Producto> aProducto = new List<Producto>();
-            var query = $"?nombre={nombre}&categoria={categoria}&stock={stock}";
+
+            // Construir la cadena de consulta dinámicamente
+            var queryParameters = new List<string>();
+            if (!string.IsNullOrEmpty(nombre))
+            {
+                queryParameters.Add($"nombre={nombre}");
+            }
+            if (id_categoria.HasValue)
+            {
+                queryParameters.Add($"categoria={id_categoria.Value}");
+            }
+            if (stock.HasValue)
+            {
+                queryParameters.Add($"stock={stock.Value}");
+            }
+            var query = string.Join("&", queryParameters);
+
+            // Si hay parámetros, añadir el prefijo "?"
+            if (!string.IsNullOrEmpty(query))
+            {
+                query = "?" + query;
+            }
+
             HttpResponseMessage response =
                 _httpClient.GetAsync(_httpClient.BaseAddress + "/Producto/reporteProducto" + query).Result;
             if (response.IsSuccessStatusCode)
@@ -35,10 +57,18 @@ namespace Proyecto.Presentacion.Controllers
             // Obtener la lista de categorías
             List<Categoria> categorias = aCategorias();
 
+            // Pasar los valores actuales de los filtros a ViewBag
+            ViewBag.CurrentFilterNombre = nombre;
+            ViewBag.CurrentFilterCategoria = id_categoria;
+            ViewBag.CurrentFilterStock = stock;
+
+
             // Pasar las categorías y la lista de productos a la vista
-            ViewBag.Categorias = categorias;
+            ViewBag.categoria = new SelectList(categorias, "id_categoria", "nom_cat");
             return View(aProducto);
         }
+
+
 
         //FIN DE REPORTE 
 
