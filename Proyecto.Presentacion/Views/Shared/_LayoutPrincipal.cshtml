@@ -58,23 +58,37 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Almacén
+                Gestión
             </div>
 
+            <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategoria" aria-expanded="true"
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProducto" aria-expanded="true"
                    aria-controls="collapseTwo">
-                    <i class="fa-solid fa-plug"></i>
-                    <span>Producto</span>
+                    <i class="fa-solid fa-gift"></i>
+                    <span>Productos</span>
                 </a>
-                <div id="collapseCategoria" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseProducto" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="@Url.ActionLink("listadoProductos","Producto")">Listado</a>
                         <a class="collapse-item" href="@Url.ActionLink("nuevoProducto","Producto")">Registrar</a>
-                        <a class="collapse-item" href="@Url.ActionLink("reporteProducto","Producto")">Reporte</a>
                     </div>
                 </div>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProveedor" aria-expanded="true"
+                   aria-controls="collapseTwo">
+                    <i class="fa-solid fa-universal-access"></i>
+                    <span>Reporte</span>
+                </a>
+                <div id="collapseProveedor" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.ActionLink("reporteProducto","Producto")">Producto</a>
+                    </div>
+                </div>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider">
             <!-- Sidebar Toggler (Sidebar) -->
@@ -342,6 +356,8 @@
 
     <!-- Page level custom scripts -->
     <script src="~/js/demo/datatables-demo.js"></script>
+
+    @RenderSection("Scripts", required: false)
 
 </body>
 

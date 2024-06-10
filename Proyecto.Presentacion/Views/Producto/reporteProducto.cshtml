@@ -11,7 +11,7 @@
     <form asp-controller="Producto" asp-action="reporteProducto" method="get" class="mb-4">
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="nombre" class="form-label">Nombre:</label>
+                <label for="nombre" class="form-label">Nombre Producto:</label>
                 <input type="text" id="nombre" name="nombre" value="@ViewBag.CurrentFilterNombre" class="form-control" />
             </div>
             <div class="col-md-4">
@@ -23,15 +23,15 @@
                 <input type="text" id="stock" name="stock" value="@ViewBag.CurrentFilterStock" class="form-control" />
             </div>
         </div>
-        <div class="row">
+        <div class="row mb-3">
             <div class="col-md-4">
-                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
             </div>
             <div class="col-md-4">
-                <button type="submit" class="btn btn-secondary w-100">Generar EXCEL</button>
+                <button type="button" class="btn btn-secondary" onclick="generarExcel()">Generar Excel</button>
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-secondary w-100" onclick="limpiarCampos()">Limpiar</button>
+                <button type="button" class="btn btn-secondary" onclick="limpiarCampos()">Limpiar</button>
             </div>
         </div>
     </form>
@@ -63,10 +63,60 @@
     </table>
 </div>
 
+<form id="formExcel" asp-controller="Producto" asp-action="GenerarExcel" method="post" style="display: none;">
+    <input type="hidden" id="nombreExcel" name="nombre" />
+    <input type="hidden" id="categoriaExcel" name="id_categoria" />
+    <input type="hidden" id="stockExcel" name="stock" />
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     function limpiarCampos() {
         document.getElementById("nombre").value = "";
         document.getElementById("id_categoria").selectedIndex = 0;
         document.getElementById("stock").value = "";
+        habilitarBotonGenerarExcel(false); // Deshabilita el botón al limpiar campos
+    }
+
+    function generarExcel() {
+        // Copia los valores de los campos de filtrado al formulario oculto para generar Excel
+        document.getElementById("nombreExcel").value = document.getElementById("nombre").value;
+        document.getElementById("categoriaExcel").value = document.getElementById("id_categoria").value;
+        document.getElementById("stockExcel").value = document.getElementById("stock").value;
+
+        // Envía el formulario oculto para generar Excel
+        document.getElementById("formExcel").submit();
+    }
+
+
+    function mostrarAlertaSiTablaVacia() {
+        var tabla = document.querySelector('.table');
+        var filas = tabla.querySelectorAll('tbody tr');
+
+        if (filas.length === 0) {
+            Swal.fire({
+                icon: 'info',
+                title: 'No hay productos',
+                text: 'No hay productos para mostrar.',
+            });
+            habilitarBotonGenerarExcel(false); // Deshabilita el botón si la tabla está vacía
+        } else {
+            habilitarBotonGenerarExcel(true); // Habilita el botón si hay productos en la tabla
+        }
+    }
+
+    // Llama a la función al cargar la página
+    window.onload = function () {
+        mostrarAlertaSiTablaVacia();
+        habilitarBotonGenerarExcel(false); // Deshabilita el botón al cargar la página
+    };
+
+    // Función para habilitar o deshabilitar el botón de generar Excel
+    function habilitarBotonGenerarExcel(habilitar) {
+        var botonExcel = document.getElementById("btnGenerarExcel");
+        botonExcel.disabled = !habilitar;
     }
 </script>
+
+
