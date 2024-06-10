@@ -32,7 +32,7 @@
                     <th>@Html.DisplayNameFor(model => model.nom_cat)</th>
                     <th>@Html.DisplayNameFor(model => model.pre_prod)</th>
                     <th>@Html.DisplayNameFor(model => model.stock)</th>
-                    <th>Opciones</th>
+                    <th>Modificar</th>
                 </tr>
             </thead>
             <tfoot>
@@ -43,7 +43,7 @@
                     <th>@Html.DisplayNameFor(model => model.nom_cat)</th>
                     <th>@Html.DisplayNameFor(model => model.pre_prod)</th>
                     <th>@Html.DisplayNameFor(model => model.stock)</th>
-                    <th>Opciones</th>
+                    <th>Modificar</th>
                 </tr>
             </tfoot>
             <tbody>
@@ -56,7 +56,7 @@
                         <td>@Html.DisplayFor(modelItem => item.nom_cat)</td>
                         <td>@Html.DisplayFor(modelItem => item.pre_prod)</td>
                         <td>@Html.DisplayFor(modelItem => item.stock)</td>
-                        <td>
+                        <td class="text-center">
                             <a href="@Url.Action("ModificarProducto", "Producto", new { id = item.id_producto })" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit"></i>
                             </a>
