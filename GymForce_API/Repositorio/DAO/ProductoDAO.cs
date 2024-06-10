@@ -139,6 +139,7 @@ namespace GymForce_API.Repositorio.DAO
             try
             {
                 SqlCommand cmd = new SqlCommand("SP_MERGE_PRODUCTO", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@ide", objP.id_producto);
                 cmd.Parameters.AddWithValue("@nom", objP.nom_prod);
                 cmd.Parameters.AddWithValue("@des", objP.des_prod);
