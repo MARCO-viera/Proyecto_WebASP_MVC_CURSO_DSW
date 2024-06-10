@@ -18,6 +18,30 @@ namespace Proyecto.Presentacion.Controllers
             _httpClient.BaseAddress = baseAddress;
         }
 
+        //PARA REPORTE
+        [HttpGet]
+        public IActionResult reporteProducto(string nombre = null, int? categoria = null, int? stock = null)
+        {
+            List<Producto> aProducto = new List<Producto>();
+            var query = $"?nombre={nombre}&categoria={categoria}&stock={stock}";
+            HttpResponseMessage response =
+                _httpClient.GetAsync(_httpClient.BaseAddress + "/Producto/reporteProducto" + query).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                aProducto = JsonConvert.DeserializeObject<List<Producto>>(data);
+            }
+
+            // Obtener la lista de categorías
+            List<Categoria> categorias = aCategorias();
+
+            // Pasar las categorías y la lista de productos a la vista
+            ViewBag.Categorias = categorias;
+            return View(aProducto);
+        }
+
+        //FIN DE REPORTE 
+
         [HttpGet]
         public IActionResult listadoProductos()
         {
