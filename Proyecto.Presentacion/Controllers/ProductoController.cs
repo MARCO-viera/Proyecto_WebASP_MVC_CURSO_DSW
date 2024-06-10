@@ -68,8 +68,6 @@ namespace Proyecto.Presentacion.Controllers
             return View(aProducto);
         }
 
-
-
         //FIN DE REPORTE 
 
         [HttpGet]
@@ -102,6 +100,7 @@ namespace Proyecto.Presentacion.Controllers
             ViewBag.categoria = new SelectList(aCategorias(), "id_categoria", "nom_cat");
             return View(new ProductoO());
         }
+
         [HttpPost]
         public async Task<IActionResult> nuevoProducto(ProductoO objP)
         {
@@ -110,17 +109,76 @@ namespace Proyecto.Presentacion.Controllers
                 ViewBag.categoria = new SelectList(aCategorias(), "id_categoria", "nom_cat");
                 return View(objP);
             }
+
             var json = JsonConvert.SerializeObject(objP);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var responseC = await
-            _httpClient.PostAsync("/api/Producto/nuevoProducto", content);
+            var responseC = await _httpClient.PostAsync("/api/Producto/nuevoProducto", content);
+
             if (responseC.IsSuccessStatusCode)
             {
-                ViewBag.mensaje = "Producto registrado correctamente..!!!";
+                TempData["SuccessMessage"] = "Producto registrado correctamente..!!!";
+                return RedirectToAction(nameof(nuevoProducto));
             }
+            else
+            {
+                TempData["ErrorMessage"] = "Error en el registro del producto.";
+            }
+
             ViewBag.categoria = new SelectList(aCategorias(), "id_categoria", "nom_cat");
             return View(objP);
         }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> modificarProducto(int id)
+        {
+            // Obtener detalles del producto desde la API
+            HttpResponseMessage response = await _httpClient.GetAsync($"/api/Producto/buscarProducto/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadAsStringAsync();
+                var producto = JsonConvert.DeserializeObject<ProductoO>(data);
+                ViewBag.categoria = new SelectList(aCategorias(), "id_categoria", "nom_cat", producto.id_categoria);
+                return View(producto);
+            }
+            else
+            {
+                // Manejar el error de búsqueda del producto
+                TempData["ErrorMessage"] = "No se pudo encontrar el producto para modificar.";
+                return RedirectToAction(nameof(listadoProductos));
+            }
+        }
+
+        [HttpPost]
+        [HttpPost]
+        public async Task<IActionResult> modificarProducto(ProductoO objP)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.categoria = new SelectList(aCategorias(), "id_categoria", "nom_cat", objP.id_categoria);
+                return View(objP);
+            }
+
+            var json = JsonConvert.SerializeObject(objP);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"/api/Producto/modificaProducto", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["SuccessMessage"] = "Producto actualizado correctamente..!!!";
+                return RedirectToAction(nameof(listadoProductos));
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Error al actualizar el producto.";
+            }
+
+            ViewBag.categoria = new SelectList(aCategorias(), "id_categoria", "nom_cat", objP.id_categoria);
+            return View(objP);
+        }
+
+
 
         public IActionResult Index()
         {

@@ -1,52 +1,157 @@
-﻿@model Proyecto.Presentacion.Models.ProductoO
+﻿<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@model Proyecto.Presentacion.Models.ProductoO
 
 @{
     ViewData["Title"] = "Nuevo Producto";
     Layout = "~/Views/Shared/_LayoutPrincipal.cshtml";
 }
 
-<h1 class="text-center">Nuevo Producto</h1>
+<style>
+    .custom-title {
+        background: linear-gradient(to right, #6c757d, #343a40); /* Degradado de fondo */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); /* Sombra del texto */
+        padding: 1rem; /* Espaciado interno */
+        border-radius: 0.5rem; /* Esquinas redondeadas */
+    }
+</style>
 
-<div class="card mx-auto" style="max-width: 600px;">
-    <div class="card-header">
-        <h4>Registrar Nuevo Producto</h4>
+<h1 class="text-center text-light mb-4 custom-title">Nuevo Producto</h1>
+
+<div class="card border-primary mx-auto shadow-lg" style="max-width: 600px;">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Registrar Nuevo Producto</h4>
     </div>
-    <div class="card-body">
-        <form asp-action="nuevoProducto">
+    <div class="card-body bg-light">
+        <form asp-action="nuevoProducto" id="productForm">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- Nombre del Producto -->
             <div class="form-group mb-3">
-                <label asp-for="nom_prod" class="control-label"></label>
-                <input asp-for="nom_prod" class="form-control" />
+                <label asp-for="nom_prod" class="control-label text-primary"></label>
+                <input asp-for="nom_prod" class="form-control border-primary" pattern="[a-zA-ZáéíóúÁÉÍÓÚ\s]+" title="Solo se permiten letras y espacios" required />
                 <span asp-validation-for="nom_prod" class="text-danger"></span>
+                <span id="nombreError" class="text-danger"></span> <!-- Mensaje de error para nombre -->
             </div>
+
+            <!-- Descripción -->
             <div class="form-group mb-3">
-                <label asp-for="des_prod" class="control-label"></label>
-                <input asp-for="des_prod" class="form-control" />
+                <label asp-for="des_prod" class="control-label text-primary"></label>
+                <input asp-for="des_prod" class="form-control border-primary" required />
                 <span asp-validation-for="des_prod" class="text-danger"></span>
+                <span id="descripcionError" class="text-danger"></span> <!-- Mensaje de error para descripción -->
             </div>
+
+            <!-- Categoría -->
             <div class="form-group mb-3">
-                <label asp-for="id_categoria" class="control-label"></label>
+                <label asp-for="id_categoria" class="control-label text-primary"></label>
                 <div class="input-group">
-                    @Html.DropDownListFor(model => model.id_categoria, (SelectList)ViewBag.categoria, "(Seleccione una Categoría)", new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.id_categoria, (SelectList)ViewBag.categoria, "(Seleccione una Categoría)", new { @class = "form-control border-primary", required = "required" })
                 </div>
                 <span asp-validation-for="id_categoria" class="text-danger"></span>
             </div>
+
+            <!-- Precio -->
             <div class="form-group mb-3">
-                <label asp-for="pre_prod" class="control-label"></label>
-                <input asp-for="pre_prod" class="form-control" />
+                <label asp-for="pre_prod" class="control-label text-primary"></label>
+                <input asp-for="pre_prod" class="form-control border-primary" type="number" step="any" required />
                 <span asp-validation-for="pre_prod" class="text-danger"></span>
+                <span id="precioError" class="text-danger"></span> <!-- Mensaje de error para precio -->
             </div>
+
+            <!-- Stock -->
             <div class="form-group mb-3">
-                <label asp-for="stock" class="control-label"></label>
-                <input asp-for="stock" class="form-control" />
+                <label asp-for="stock" class="control-label text-primary"></label>
+                <input asp-for="stock" class="form-control border-primary" type="number" step="1" required />
                 <span asp-validation-for="stock" class="text-danger"></span>
+                <span id="stockError" class="text-danger"></span> <!-- Mensaje de error para stock -->
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Registrar" class="btn btn-primary w-100" />
             </div>
         </form>
+
+        <div class="card-footer text-end">
+            <a asp-action="listadoProductos" class="btn btn-secondary w-100 mt-3">Volver al Listado</a>
+        </div>
     </div>
-    <div class="card-footer text-end">
-        <a asp-action="listadoProductos" class="btn btn-secondary">Volver al Listado</a>
-    </div>
-</div>
+
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                // Check for success message
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <text>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Resultado del Registro',
+                            text: '@TempData["SuccessMessage"]'
+                        }).then(() => {
+                            // Reset form
+                            $('#productForm')[0].reset();
+                        });
+                </text>
+            }
+
+                    // Check for error message
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <text>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Resultado del Registro',
+                            text: '@TempData["ErrorMessage"]'
+                        });
+                </text>
+            }
+
+                    // Validar campos al enviar el formulario
+                    $('#productForm').submit(function (e) {
+                        // Validar nombre
+                        var nombre = $('#nom_prod').val();
+                        if (!nombre) {
+                            e.preventDefault(); // Evitar el envío del formulario
+                            $('#nombreError').text('Complete el nombre del producto.'); // Mostrar mensaje de error
+                        } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/.test(nombre)) {
+                            e.preventDefault(); // Evitar el envío del formulario
+                            $('#nombreError').text('Solo se permiten letras y espacios.'); // Mostrar mensaje de error
+                        } else {
+                            $('#nombreError').text(''); // Limpiar mensaje de error
+                        }
+
+                        // Validar descripción
+                        var descripcion = $('#des_prod').val();
+                        if (!descripcion) {
+                            e.preventDefault(); // Evitar el envío del formulario
+                            $('#descripcionError').text('Complete la descripción del producto.'); // Mostrar mensaje de error
+                        } else {
+                            $('#descripcionError').text(''); // Limpiar mensaje de error
+                        }
+
+                        // Validar precio
+                        var precio = parseFloat($('#pre_prod').val());
+                        if (precio <= 0 || isNaN(precio)) {
+                            e.preventDefault(); // Evitar el envío del formulario
+                            $('#precioError').text('El precio debe ser mayor a 0.'); // Mostrar mensaje de error
+                        } else if (!(/^\d+(\.\d{1,2})?$/.test(precio))) {
+                            e.preventDefault(); // Evitar el envío del formulario
+                            $('#precioError').text('El precio debe tener máximo 2 decimales.'); // Mostrar mensaje de error
+                        } else {
+                            $('#precioError').text(''); // Limpiar mensaje de error
+                        }
+
+                        // Validar stock
+                        var stock = parseInt($('#stock').val());
+                        if (stock <= 0 || isNaN(stock)) {
+                            e.preventDefault(); // Evitar el envío del formulario
+                            $('#stockError').text('El stock debe ser mayor a 0.'); // Mostrar mensaje de error
+                        } else {
+                            $('#stockError').text(''); // Limpiar mensaje de error
+                        }
+                    });
+            });
+        </script>
+    }
+
+
