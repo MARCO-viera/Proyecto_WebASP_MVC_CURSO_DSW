@@ -21,7 +21,7 @@
         <h4 class="mb-0">Modificar Producto</h4>
     </div>
     <div class="card-body bg-light">
-        <form asp-action="modificarProducto">
+        <form asp-action="modificarProducto" id="productoForm">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
             <input type="hidden" asp-for="id_producto" />
@@ -63,11 +63,19 @@
                 <span asp-validation-for="stock" class="text-danger"></span>
             </div>
 
+            <!-- Proveedor -->
+            <div class="form-group mb-3">
+                <label asp-for="id_proveedor" class="control-label text-primary"></label>
+                <div class="input-group">
+                    <select asp-for="id_proveedor" class="form-control border-primary" asp-items="ViewBag.proveedor"></select>
+                </div>
+                <span asp-validation-for="id_proveedor" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Actualizar" class="btn btn-primary w-100" />
             </div>
         </form>
-
     </div>
 </div>
 
@@ -75,65 +83,49 @@
     <script>
         // Validar campos al enviar el formulario
         $(document).ready(function () {
-            $('#modificarProducto').submit(function (e) {
+            $('#productoForm').submit(function (e) {
                 // Validar nombre
                 var nombre = $('#nom_prod').val();
                 if (!nombre) {
                     e.preventDefault(); // Evitar el envío del formulario
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Complete el nombre del producto.'
-                    });
+                    alert('Complete el nombre del producto.');
                 } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/.test(nombre)) {
                     e.preventDefault(); // Evitar el envío del formulario
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Solo se permiten letras y espacios en el nombre.'
-                    });
+                    alert('Solo se permiten letras y espacios en el nombre.');
                 }
 
                 // Validar descripción
                 var descripcion = $('#des_prod').val();
                 if (!descripcion) {
                     e.preventDefault(); // Evitar el envío del formulario
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Complete la descripción del producto.'
-                    });
+                    alert('Complete la descripción del producto.');
                 }
 
                 // Validar precio
                 var precio = parseFloat($('#pre_prod').val());
                 if (precio <= 0 || isNaN(precio)) {
                     e.preventDefault(); // Evitar el envío del formulario
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'El precio debe ser mayor a 0.'
-                    });
+                    alert('El precio debe ser mayor a 0.');
                 } else if (!(/^\d+(\.\d{1,2})?$/.test(precio))) {
                     e.preventDefault(); // Evitar el envío del formulario
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'El precio debe tener máximo 2 decimales.'
-                    });
+                    alert('El precio debe tener máximo 2 decimales.');
                 }
 
                 // Validar stock
                 var stock = parseInt($('#stock').val());
                 if (stock <= 0 || isNaN(stock)) {
                     e.preventDefault(); // Evitar el envío del formulario
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'El stock debe ser mayor a 0.'
-                    });
+                    alert('El stock debe ser mayor a 0.');
                 }
             });
-        });
+
+            // Redirección en caso de éxito
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                    window.location.href = '@Url.Action("listadoProductos", "Producto")';
+            </text>
+        }
+                });
     </script>
 }

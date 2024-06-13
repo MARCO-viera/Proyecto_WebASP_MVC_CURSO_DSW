@@ -79,10 +79,24 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProveedor" aria-expanded="true"
                    aria-controls="collapseTwo">
+                    <i class="fa-solid fa-gift"></i>
+                    <span>Proveedor</span>
+                </a>
+                <div id="collapseProveedor" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.ActionLink("listadoProveedor","Producto")">Listado</a>
+                        <a class="collapse-item" href="@Url.ActionLink("nuevoProveedor","Producto")">Registrar</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReporte" aria-expanded="true"
+                   aria-controls="collapseTwo">
                     <i class="fa-solid fa-universal-access"></i>
                     <span>Reporte</span>
                 </a>
-                <div id="collapseProveedor" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseReporte" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="@Url.ActionLink("reporteProducto","Producto")">Producto</a>
                     </div>

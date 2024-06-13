@@ -198,6 +198,7 @@ namespace Proyecto.Presentacion.Controllers
         public IActionResult nuevoProducto()
         {
             ViewBag.categoria = new SelectList(aCategorias(), "id_categoria", "nom_cat");
+            ViewBag.proveedor = new SelectList(aProveedores(), "id_proveedor", "raz_soc");
             return View(new ProductoO());
         }
 
@@ -207,6 +208,7 @@ namespace Proyecto.Presentacion.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.categoria = new SelectList(aCategorias(), "id_categoria", "nom_cat");
+                ViewBag.proveedor = new SelectList(aProveedores(), "id_proveedor", "raz_soc");
                 return View(objP);
             }
 
@@ -225,6 +227,7 @@ namespace Proyecto.Presentacion.Controllers
             }
 
             ViewBag.categoria = new SelectList(aCategorias(), "id_categoria", "nom_cat");
+            ViewBag.proveedor = new SelectList(aProveedores(), "id_proveedor", "raz_soc");
             return View(objP);
         }
 
@@ -240,6 +243,7 @@ namespace Proyecto.Presentacion.Controllers
                 var data = await response.Content.ReadAsStringAsync();
                 var producto = JsonConvert.DeserializeObject<ProductoO>(data);
                 ViewBag.categoria = new SelectList(aCategorias(), "id_categoria", "nom_cat", producto.id_categoria);
+                ViewBag.proveedor = new SelectList(aProveedores(), "id_proveedor", "raz_soc", producto.id_proveedor);
                 return View(producto);
             }
             else
@@ -257,6 +261,7 @@ namespace Proyecto.Presentacion.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.categoria = new SelectList(aCategorias(), "id_categoria", "nom_cat", objP.id_categoria);
+                ViewBag.proveedor = new SelectList(aProveedores(), "id_proveedor", "raz_soc", objP.id_proveedor);
                 return View(objP);
             }
 
@@ -275,7 +280,115 @@ namespace Proyecto.Presentacion.Controllers
             }
 
             ViewBag.categoria = new SelectList(aCategorias(), "id_categoria", "nom_cat", objP.id_categoria);
+            ViewBag.proveedor = new SelectList(aProveedores(), "id_proveedor", "raz_soc", objP.id_proveedor);
             return View(objP);
+        }
+
+
+
+
+
+
+
+
+        //PROVEEDOR
+        public List<Proveedor> aProveedores()
+        {
+            List<Proveedor> aProveedores = new List<Proveedor>();
+            HttpResponseMessage response =
+            _httpClient.GetAsync(_httpClient.BaseAddress + "/Producto/listadoProveedor").Result;
+            var data = response.Content.ReadAsStringAsync().Result;
+            aProveedores = JsonConvert.DeserializeObject<List<Proveedor>>(data);
+            return aProveedores;
+        }
+
+        public IActionResult listadoProveedor()
+        {
+            List<Proveedor> aProveedores = new List<Proveedor>();
+            HttpResponseMessage response =
+            _httpClient.GetAsync(_httpClient.BaseAddress + "/Producto/listadoProveedor").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                aProveedores = JsonConvert.DeserializeObject<List<Proveedor>>(data);
+            }
+            return View(aProveedores);
+        }
+
+        [HttpGet]
+        public IActionResult nuevoProveedor()
+        {
+            return View(new Proveedor());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> nuevoProveedor(Proveedor objPv)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(objPv);
+            }
+
+            var json = JsonConvert.SerializeObject(objPv);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var responseC = await _httpClient.PostAsync("/api/Producto/nuevoProveedor", content);
+
+            if (responseC.IsSuccessStatusCode)
+            {
+                TempData["SuccessMessage"] = "Proveedor registrado correctamente..!!!";
+                return RedirectToAction(nameof(nuevoProveedor));
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Error en el registro del proveedor.";
+            }
+            return View(objPv);
+        }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> modificarProveedor(int id)
+        {
+            // Obtener detalles del producto desde la API
+            HttpResponseMessage response = await _httpClient.GetAsync($"/api/Producto/buscarProveedor/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadAsStringAsync();
+                var proveedor = JsonConvert.DeserializeObject<Proveedor>(data);
+                return View(proveedor);
+            }
+            else
+            {
+                // Manejar el error de búsqueda del producto
+                TempData["ErrorMessage"] = "No se pudo encontrar el proveedor para modificar.";
+                return RedirectToAction(nameof(listadoProductos));
+            }
+        }
+
+        [HttpPost]
+        [HttpPost]
+        public async Task<IActionResult> modificarProveedor(Proveedor objPv)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(objPv);
+            }
+
+            var json = JsonConvert.SerializeObject(objPv);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"/api/Producto/modificaProveedor", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["SuccessMessage"] = "Proveedor actualizado correctamente..!!!";
+                return RedirectToAction(nameof(listadoProveedor));
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Error al actualizar el proveedor.";
+            }
+            return View(objPv);
         }
 
 

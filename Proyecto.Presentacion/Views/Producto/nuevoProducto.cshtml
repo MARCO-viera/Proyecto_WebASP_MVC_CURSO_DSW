@@ -66,6 +66,15 @@
                 <span id="stockError" class="text-danger"></span> <!-- Mensaje de error para stock -->
             </div>
 
+            <!-- Proveedor -->
+            <div class="form-group mb-3">
+                <label asp-for="id_proveedor" class="control-label text-primary"></label>
+                <div class="input-group">
+                    @Html.DropDownListFor(model => model.id_proveedor, (SelectList)ViewBag.proveedor, "(Seleccione un Proveedor)", new { @class = "form-control border-primary", required = "required" })
+                </div>
+                <span asp-validation-for="id_proveedor" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Registrar" class="btn btn-primary w-100" />
             </div>

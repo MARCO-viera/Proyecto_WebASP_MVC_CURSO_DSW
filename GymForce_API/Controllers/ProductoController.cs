@@ -18,13 +18,6 @@ namespace GymForce_API.Controllers
             return Ok(lista);
         }
 
-        [HttpGet("listadoCategoria")]
-        public async Task<ActionResult<List<Categoria>>> listadoCategoria()
-        {
-            var lista = await Task.Run(() => new CategoriaDAO().listadoCategorias());
-            return Ok(lista);
-        }
-
         [HttpGet("listadoProductos")]
         public async Task<ActionResult<List<Producto>>> listadoProducto()
         {
@@ -62,6 +55,37 @@ namespace GymForce_API.Controllers
         public async Task<ActionResult<List<ProductoO>>> buscarProducto(int id)
         {
             var lista = await Task.Run(() => new ProductoDAO().buscarProducto(id));
+            return Ok(lista);
+        }
+
+
+
+        //PROVEEDOR
+        [HttpGet("listadoProveedor")]
+        public async Task<ActionResult<List<Proveedor>>> listadoProveedores()
+        {
+            var lista = await Task.Run(() =>
+            new ProveedorDAO().listadoProveedores());
+            return Ok(lista);
+        }
+        [HttpPost("nuevoProveedor")]
+        public async Task<ActionResult<string>> nuevoProveedor(Proveedor objC)
+        {
+            var mensaje = await Task.Run(() =>
+            new ProveedorDAO().nuevoProveedor(objC));
+            return Ok(mensaje);
+        }
+        [HttpPut("modificaProveedor")]
+        public async Task<ActionResult<string>> modificaProveedor(Proveedor objC)
+        {
+            var mensaje = await Task.Run(() =>
+            new ProveedorDAO().modificaProveedor(objC));
+            return Ok(mensaje);
+        }
+        [HttpGet("buscarProveedor/{id}")]
+        public async Task<ActionResult<List<Proveedor>>> buscarProveedor(int id)
+        {
+            var lista = await Task.Run(() => new ProveedorDAO().buscarProveedor(id));
             return Ok(lista);
         }
     }

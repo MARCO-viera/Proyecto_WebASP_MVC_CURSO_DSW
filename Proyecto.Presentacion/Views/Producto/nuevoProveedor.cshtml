@@ -1,0 +1,117 @@
+﻿<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@model Proyecto.Presentacion.Models.Proveedor
+
+@{
+    ViewData["Title"] = "nuevoProveedor";
+    Layout = "~/Views/Shared/_LayoutPrincipal.cshtml";
+}
+
+<style>
+    .custom-title {
+        background: linear-gradient(to right, #6c757d, #343a40); /* Degradado de fondo */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); /* Sombra del texto */
+        padding: 1rem; /* Espaciado interno */
+        border-radius: 0.5rem; /* Esquinas redondeadas */
+    }
+</style>
+
+<h1 class="text-center text-light mb-4 custom-title">Nuevo Proveedor</h1>
+
+<div class="card border-primary mx-auto shadow-lg" style="max-width: 600px;">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Registrar Nuevo Proveedor</h4>
+    </div>
+    <div class="card-body bg-light">
+        <form asp-action="nuevoProveedor" id="proveedorForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- Razón Social -->
+            <div class="form-group mb-3">
+                <label asp-for="raz_soc" class="control-label text-primary"></label>
+                <input asp-for="raz_soc" class="form-control border-primary" pattern="[a-zA-ZáéíóúÁÉÍÓÚ\s]+" title="Solo se permiten letras y espacios" required />
+                <span asp-validation-for="raz_soc" class="text-danger"></span>
+                <span id="razonError" class="text-danger"></span> <!-- Mensaje de error para razón social -->
+            </div>
+
+            <!-- RUC -->
+            <div class="form-group mb-3">
+                <label asp-for="ruc" class="control-label text-primary"></label>
+                <input asp-for="ruc" class="form-control border-primary" pattern="\d{11}" title="El RUC debe tener 11 dígitos" required />
+                <span asp-validation-for="ruc" class="text-danger"></span>
+                <span id="rucError" class="text-danger"></span> <!-- Mensaje de error para RUC -->
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Registrar" class="btn btn-primary w-100" />
+            </div>
+        </form>
+
+        <div class="card-footer text-end">
+            <a asp-action="listadoProveedor" class="btn btn-secondary w-100 mt-3">Volver al Listado</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // Check for success message
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Resultado del Registro',
+                        text: '@TempData["SuccessMessage"]'
+                    }).then(() => {
+                        // Reset form
+                        $('#proveedorForm')[0].reset();
+                    });
+            </text>
+        }
+
+                // Check for error message
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Resultado del Registro',
+                        text: '@TempData["ErrorMessage"]'
+                    });
+            </text>
+        }
+
+                // Validar campos al enviar el formulario
+                $('#proveedorForm').submit(function (e) {
+                    // Validar razón social
+                    var razon = $('#raz_soc').val();
+                    if (!razon) {
+                        e.preventDefault(); // Evitar el envío del formulario
+                        $('#razonError').text('Complete la razón social.'); // Mostrar mensaje de error
+                    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/.test(razon)) {
+                        e.preventDefault(); // Evitar el envío del formulario
+                        $('#razonError').text('Solo se permiten letras y espacios.'); // Mostrar mensaje de error
+                    } else {
+                        $('#razonError').text(''); // Limpiar mensaje de error
+                    }
+
+                    // Validar RUC
+                    var ruc = $('#ruc').val();
+                    if (!ruc) {
+                        e.preventDefault(); // Evitar el envío del formulario
+                        $('#rucError').text('Complete el RUC.'); // Mostrar mensaje de error
+                    } else if (!/^\d{11}$/.test(ruc)) {
+                        e.preventDefault(); // Evitar el envío del formulario
+                        $('#rucError').text('El RUC debe tener 11 dígitos.'); // Mostrar mensaje de error
+                    } else {
+                        $('#rucError').text(''); // Limpiar mensaje de error
+                    }
+                });
+        });
+    </script>
+}

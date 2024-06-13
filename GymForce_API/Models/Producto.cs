@@ -8,5 +8,6 @@
         public string? nom_cat { get; set;}
         public double pre_prod { get; set; }
         public int stock {  get; set; }
+        public string? raz_soc { get; set; }
     }
 }

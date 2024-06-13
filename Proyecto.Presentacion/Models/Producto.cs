@@ -21,5 +21,8 @@ namespace Proyecto.Presentacion.Models
 
         [DisplayName("STOCK")]
         public int stock { get; set; }
+
+        [DisplayName("PROVEEDOR")]
+        public string? raz_soc { get; set; }
     }
 }

@@ -1,0 +1,92 @@
+﻿@model Proyecto.Presentacion.Models.Proveedor
+
+@{
+    ViewData["Title"] = "modificarProveedor";
+    Layout = "~/Views/Shared/_LayoutPrincipal.cshtml";
+}
+
+<style>
+    .custom-title {
+        background: linear-gradient(to right, #6c757d, #343a40);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+</style>
+
+<h1 class="text-center text-light mb-4 custom-title">Modificar Proveedor</h1>
+
+<div class="card border-primary mx-auto shadow-lg" style="max-width: 600px;">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Modificar Proveedor</h4>
+    </div>
+    <div class="card-body bg-light">
+        <form asp-action="modificarProveedor" id="proveedorForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <input type="hidden" asp-for="id_proveedor" />
+
+            <!-- Razón Social -->
+            <div class="form-group mb-3">
+                <label asp-for="raz_soc" class="control-label text-primary"></label>
+                <input asp-for="raz_soc" class="form-control border-primary" pattern="[a-zA-ZáéíóúÁÉÍÓÚ\s]+" title="Solo se permiten letras y espacios" required />
+                <span asp-validation-for="raz_soc" class="text-danger"></span>
+            </div>
+
+            <!-- RUC -->
+            <div class="form-group mb-3">
+                <label asp-for="ruc" class="control-label text-primary"></label>
+                <input asp-for="ruc" class="form-control border-primary" pattern="\d{11}" title="El RUC debe tener 11 dígitos" required />
+                <span asp-validation-for="ruc" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary w-100" />
+            </div>
+        </form>
+    </div>
+    <div class="card-footer text-end">
+        <a asp-action="listadoProveedor" class="btn btn-secondary w-100 mt-3">Volver al Listado</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // Check for success message
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                    window.location.href = '@Url.Action("listadoProveedor", "Producto")';
+            </text>
+        }
+
+                // Validar campos al enviar el formulario
+                $('#proveedorForm').submit(function (e) {
+                    // Validar razón social
+                    var razon = $('#raz_soc').val();
+                    if (!razon) {
+                        e.preventDefault(); // Evitar el envío del formulario
+                        alert('Complete la razón social.');
+                    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/.test(razon)) {
+                        e.preventDefault(); // Evitar el envío del formulario
+                        alert('Solo se permiten letras y espacios en la razón social.');
+                    }
+
+                    // Validar RUC
+                    var ruc = $('#ruc').val();
+                    if (!ruc) {
+                        e.preventDefault(); // Evitar el envío del formulario
+                        alert('Complete el RUC.');
+                    } else if (!/^\d{11}$/.test(ruc)) {
+                        e.preventDefault(); // Evitar el envío del formulario
+                        alert('El RUC debe tener 11 dígitos.');
+                    }
+                });
+        });
+    </script>
+}

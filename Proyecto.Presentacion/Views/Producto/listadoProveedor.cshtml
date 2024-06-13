@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Proyecto.Presentacion.Models.Proveedor>
+
+@{
+    ViewData["Title"] = "listadoProveedor";
+    Layout = "~/Views/Shared/_LayoutPrincipal.cshtml";
+}
+
+<style>
+    .custom-title {
+        background: linear-gradient(to right, #6c757d, #343a40); /* Degradado de fondo */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); /* Sombra del texto */
+        padding: 1rem; /* Espaciado interno */
+        border-radius: 0.5rem; /* Esquinas redondeadas */
+    }
+</style>
+
+<h1 class="text-center text-light mb-4 custom-title">Listado de Proveedor</h1>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <a href="@Url.Action("nuevoProveedor", "Producto")" class="btn btn-primary float-right">
+            <i class="fas fa-plus"></i> Agregar Proveedor
+        </a>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.id_proveedor)</th>
+                    <th>@Html.DisplayNameFor(model => model.raz_soc)</th>
+                    <th>@Html.DisplayNameFor(model => model.ruc)</th>
+                    <th>Modificar</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.id_proveedor)</th>
+                    <th>@Html.DisplayNameFor(model => model.raz_soc)</th>
+                    <th>@Html.DisplayNameFor(model => model.ruc)</th>
+                    <th>Modificar</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.id_proveedor)</td>
+                        <td>@Html.DisplayFor(modelItem => item.raz_soc)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ruc)</td>
+                        <td class="text-center">
+                            <a href="@Url.Action("ModificarProveedor", "Producto", new { id = item.id_proveedor })" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

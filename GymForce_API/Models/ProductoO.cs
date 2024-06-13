@@ -8,5 +8,6 @@
         public int id_categoria { get; set; }
         public double pre_prod { get; set; }
         public int stock { get; set; }
+        public int id_proveedor { get; set; }
     }
 }

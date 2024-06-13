@@ -27,5 +27,9 @@ namespace Proyecto.Presentacion.Models
         [Required(ErrorMessage = "STOCK DEL PRODUCTO")]
         [DisplayName("STOCK")]
         public int stock { get; set; }
+
+        [Required(ErrorMessage = "PROVEEDOR DEL PRODUCTO")]
+        [DisplayName("PROVEEDOR")]
+        public int id_proveedor { get; set; }
     }
 }
