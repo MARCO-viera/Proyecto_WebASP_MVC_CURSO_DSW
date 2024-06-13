@@ -27,7 +27,7 @@ namespace Proyecto.Presentacion.Controllers
 
         //PARA REPORTE
         [HttpGet]
-        public IActionResult reporteProducto(string nombre = null, int? id_categoria = null, int? stock = null)
+        public IActionResult reporteProducto(string nombre = null, int? id_categoria = null, int? stock = null, int? id_proveedor = null)
         {
             List<Producto> aProducto = new List<Producto>();
 
@@ -44,6 +44,10 @@ namespace Proyecto.Presentacion.Controllers
             if (stock.HasValue)
             {
                 queryParameters.Add($"stock={stock.Value}");
+            }
+            if (id_proveedor.HasValue)
+            {
+                queryParameters.Add($"proveedor={id_proveedor.Value}");
             }
             var query = string.Join("&", queryParameters);
 
@@ -68,36 +72,46 @@ namespace Proyecto.Presentacion.Controllers
             ViewBag.CurrentFilterNombre = nombre;
             ViewBag.CurrentFilterCategoria = id_categoria;
             ViewBag.CurrentFilterStock = stock;
+            ViewBag.CurrentFilterProveedor = id_proveedor;
 
 
             // Pasar las categorías y la lista de productos a la vista
             ViewBag.categoria = new SelectList(categorias, "id_categoria", "nom_cat");
+            ViewBag.proveedor = new SelectList(aProveedores(), "id_proveedor", "raz_soc");
             return View(aProducto);
         }
-
         [HttpPost]
-        public IActionResult GenerarExcel(string nombre = null, int? id_categoria = null, int? stock = null)
+        public IActionResult GenerarExcel(string nombre = null, int? id_categoria = null, int? stock = null, int? id_proveedor = null)
         {
             // Obtener los datos filtrados
-            List<Producto> productosFiltrados = ObtenerProductosFiltrados(nombre, id_categoria, stock);
+            List<Producto> productosFiltrados = ObtenerProductosFiltrados(nombre, id_categoria, stock, id_proveedor);
 
             // Crear el libro de Excel y la hoja de trabajo
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Productos");
 
-            // Agregar encabezados de columna
+            // Agregar encabezados de columna con estilo ejecutivo
+            var headersRow = worksheet.Row(1);
+            headersRow.Style.Font.Bold = true; // Texto en negrita
+            headersRow.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center; // Alineación horizontal centrada
+            headersRow.Style.Fill.BackgroundColor = XLColor.FromHtml("#337ab7"); // Color de fondo azul ejecutivo
+            headersRow.Style.Font.FontColor = XLColor.White; // Color de fuente blanco
+
+
+            // Agregar nombres de encabezados
             worksheet.Cell(1, 1).Value = "ID";
             worksheet.Cell(1, 2).Value = "Nombre";
             worksheet.Cell(1, 3).Value = "Descripción";
             worksheet.Cell(1, 4).Value = "Categoría";
             worksheet.Cell(1, 5).Value = "Precio";
             worksheet.Cell(1, 6).Value = "Stock";
+            worksheet.Cell(1, 7).Value = "Proveedor";
 
-            // Aplicar estilos a los encabezados
-            var headersRow = worksheet.Row(1);
-            headersRow.Style.Font.Bold = true; // Texto en negrita
-            headersRow.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center; // Alineación horizontal centrada
-            headersRow.Style.Fill.BackgroundColor = XLColor.LightBlue; // Color de fondo celeste
+            // Ajustar el ancho de las columnas
+            for (int i = 1; i <= 8; i++)
+            {
+                worksheet.Column(i).AdjustToContents();
+            }
 
             // Agregar datos filtrados al archivo Excel
             for (int i = 0; i < productosFiltrados.Count; i++)
@@ -110,14 +124,14 @@ namespace Proyecto.Presentacion.Controllers
                 row.Cell(4).Value = productosFiltrados[i].nom_cat;
                 row.Cell(5).Value = productosFiltrados[i].pre_prod;
                 row.Cell(6).Value = productosFiltrados[i].stock;
+                row.Cell(7).Value = productosFiltrados[i].raz_soc;
 
-                // Aplicar bordes a las celdas de datos
+                // Aplicar estilos a las celdas de datos
+                row.Style.Fill.BackgroundColor = XLColor.FromHtml("#f7f7f7"); // Color de fondo gris claro
                 row.Style.Border.OutsideBorder = XLBorderStyleValues.Thin; // Borde delgado en el exterior de la celda
-                                                                           // Puedes agregar más estilos de bordes según tus necesidades
+                row.Style.Border.InsideBorder = XLBorderStyleValues.Thin; // Borde delgado dentro de la celda
+                row.Style.Font.FontName = "Arial"; // Fuente Arial
             }
-
-            // Autoajustar ancho de las columnas
-            worksheet.Columns().AdjustToContents();
 
             // Guardar el libro de Excel en un MemoryStream
             using (var stream = new MemoryStream())
@@ -130,7 +144,7 @@ namespace Proyecto.Presentacion.Controllers
             }
         }
 
-            private List<Producto> ObtenerProductosFiltrados(string nombre, int? id_categoria, int? stock)
+        private List<Producto> ObtenerProductosFiltrados(string nombre, int? id_categoria, int? stock, int? id_proveedor)
         {
             // Construir la cadena de consulta dinámicamente
             var queryParameters = new List<string>();
@@ -145,6 +159,10 @@ namespace Proyecto.Presentacion.Controllers
             if (stock.HasValue)
             {
                 queryParameters.Add($"stock={stock.Value}");
+            }
+            if (id_proveedor.HasValue)
+            {
+                queryParameters.Add($"proveedor={id_proveedor.Value}");
             }
             var query = string.Join("&", queryParameters);
 

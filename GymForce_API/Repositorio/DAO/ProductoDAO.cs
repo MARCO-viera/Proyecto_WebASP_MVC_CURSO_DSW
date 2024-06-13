@@ -20,7 +20,7 @@ namespace GymForce_API.Repositorio.DAO
             using (SqlConnection cn = new SqlConnection(cadena))
             {
                 cn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT ID_PRODUCTO, NOM_PROD, DES_PROD, ID_CATEGORIA, PRE_PROD, STOCK FROM PRODUCTOS WHERE ID_PRODUCTO = @id", cn))
+                using (SqlCommand cmd = new SqlCommand("SELECT ID_PRODUCTO, NOM_PROD, DES_PROD, ID_CATEGORIA, PRE_PROD, STOCK,ID_PROVEEDOR FROM PRODUCTOS WHERE ID_PRODUCTO = @id", cn))
                 {
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -35,7 +35,8 @@ namespace GymForce_API.Repositorio.DAO
                                 des_prod = dr.GetString(dr.GetOrdinal("DES_PROD")),
                                 id_categoria = dr.GetInt32(dr.GetOrdinal("ID_CATEGORIA")),
                                 pre_prod = Convert.ToDouble(dr.GetDecimal(dr.GetOrdinal("PRE_PROD"))),
-                                stock = dr.GetInt32(dr.GetOrdinal("STOCK"))
+                                stock = dr.GetInt32(dr.GetOrdinal("STOCK")),
+                                id_proveedor = dr.GetInt32(dr.GetOrdinal("ID_PROVEEDOR"))
                             };
                         }
                     }
@@ -47,7 +48,7 @@ namespace GymForce_API.Repositorio.DAO
 
 
         //PARA REPORTE
-        public IEnumerable<Producto> reporteProducto(string nombre = null, int? categoria = null, int? stock = null)
+        public IEnumerable<Producto> reporteProducto(string nombre = null, int? categoria = null, int? stock = null, int? proveedor = null)
         {
             List<Producto> aProducto = new List<Producto>();
             using (SqlConnection cn = new SqlConnection(cadena))
@@ -61,6 +62,7 @@ namespace GymForce_API.Repositorio.DAO
                     cmd.Parameters.AddWithValue("@NOMBRE", (object)nombre ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@CATEGORIA", (object)categoria ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@STOCK", (object)stock ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@PROVEEDOR", (object)proveedor ?? DBNull.Value);
 
                     using (SqlDataReader dr = cmd.ExecuteReader())
                     {
@@ -74,6 +76,7 @@ namespace GymForce_API.Repositorio.DAO
                                 nom_cat = dr.GetString(dr.GetOrdinal("NOM_CAT")),
                                 pre_prod = Convert.ToDouble(dr.GetDecimal(dr.GetOrdinal("PRE_PROD"))), 
                                 stock = dr.GetInt32(dr.GetOrdinal("STOCK")),
+                                raz_soc = dr.GetString(dr.GetOrdinal("RAZ_SOC")),
                             });
                         }
                     }
@@ -101,6 +104,7 @@ namespace GymForce_API.Repositorio.DAO
                     nom_cat = dr[3].ToString(),
                     pre_prod = double.Parse(dr[4].ToString()),
                     stock = int.Parse(dr[5].ToString()),
+                    raz_soc = dr[6].ToString(),
                 });
             }
             cn.Close();
@@ -125,6 +129,7 @@ namespace GymForce_API.Repositorio.DAO
                     id_categoria = int.Parse(dr[3].ToString()),
                     pre_prod = double.Parse(dr[4].ToString()),
                     stock = int.Parse(dr[5].ToString()),
+                    id_proveedor = int.Parse(dr[6].ToString()),
                 });
             }
             cn.Close();
@@ -147,6 +152,7 @@ namespace GymForce_API.Repositorio.DAO
                     cmd.Parameters.AddWithValue("@cat", objP.id_categoria);
                     cmd.Parameters.AddWithValue("@pre", objP.pre_prod);
                     cmd.Parameters.AddWithValue("@stock", objP.stock);
+                    cmd.Parameters.AddWithValue("@prov", objP.id_proveedor);
                     int n = cmd.ExecuteNonQuery();
                     mensaje = n.ToString() + " Producto actualizado...!!!";
                 }
@@ -175,6 +181,7 @@ namespace GymForce_API.Repositorio.DAO
                 cmd.Parameters.AddWithValue("@cat", objP.id_categoria);
                 cmd.Parameters.AddWithValue("@pre", objP.pre_prod);
                 cmd.Parameters.AddWithValue("@stock", objP.stock);
+                cmd.Parameters.AddWithValue("@prov", objP.id_proveedor);
                 int n = cmd.ExecuteNonQuery();
                 mensaje = n.ToString() + "Producto registrado...!!!";
             }

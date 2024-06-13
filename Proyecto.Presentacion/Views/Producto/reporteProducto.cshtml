@@ -10,17 +10,21 @@
 <div class="container">
     <form asp-controller="Producto" asp-action="reporteProducto" method="get" class="mb-4">
         <div class="row mb-3">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="nombre" class="form-label">Nombre Producto:</label>
                 <input type="text" id="nombre" name="nombre" value="@ViewBag.CurrentFilterNombre" class="form-control" />
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="id_categoria" class="form-label">Categoría:</label>
                 @Html.DropDownList("id_categoria", (SelectList)ViewBag.categoria, "(Seleccione una Categoría)", new { @class = "form-control" })
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="stock" class="form-label">Stock:</label>
                 <input type="text" id="stock" name="stock" value="@ViewBag.CurrentFilterStock" class="form-control" />
+            </div>
+            <div class="col-md-3">
+                <label for="id_proveedor" class="form-label">Proveedor:</label>
+                @Html.DropDownList("id_proveedor", (SelectList)ViewBag.proveedor, "(Seleccione un Proveedor)", new { @class = "form-control" })
             </div>
         </div>
         <div class="row mb-3">
@@ -28,7 +32,7 @@
                 <button type="submit" class="btn btn-primary">Filtrar</button>
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-secondary" onclick="generarExcel()">Generar Excel</button>
+                <button type="button" id="btnGenerarExcel" class="btn btn-secondary" onclick="generarExcel()">Generar Excel</button>
             </div>
             <div class="col-md-4">
                 <button type="button" class="btn btn-secondary" onclick="limpiarCampos()">Limpiar</button>
@@ -45,6 +49,7 @@
                 <th>@Html.DisplayNameFor(model => model.nom_cat)</th>
                 <th>@Html.DisplayNameFor(model => model.pre_prod)</th>
                 <th>@Html.DisplayNameFor(model => model.stock)</th>
+                <th>@Html.DisplayNameFor(model => model.raz_soc)</th>
             </tr>
         </thead>
         <tbody>
@@ -57,6 +62,7 @@
                     <td>@Html.DisplayFor(modelItem => item.nom_cat)</td>
                     <td>@Html.DisplayFor(modelItem => item.pre_prod)</td>
                     <td>@Html.DisplayFor(modelItem => item.stock)</td>
+                    <td>@Html.DisplayFor(modelItem => item.raz_soc)</td>
                 </tr>
             }
         </tbody>
@@ -67,6 +73,7 @@
     <input type="hidden" id="nombreExcel" name="nombre" />
     <input type="hidden" id="categoriaExcel" name="id_categoria" />
     <input type="hidden" id="stockExcel" name="stock" />
+    <input type="hidden" id="proveedorExcel" name="id_proveedor" />
 </form>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -76,6 +83,7 @@
         document.getElementById("nombre").value = "";
         document.getElementById("id_categoria").selectedIndex = 0;
         document.getElementById("stock").value = "";
+        document.getElementById("id_proveedor").selectedIndex = 0;
         habilitarBotonGenerarExcel(false); // Deshabilita el botón al limpiar campos
     }
 
@@ -84,11 +92,11 @@
         document.getElementById("nombreExcel").value = document.getElementById("nombre").value;
         document.getElementById("categoriaExcel").value = document.getElementById("id_categoria").value;
         document.getElementById("stockExcel").value = document.getElementById("stock").value;
+        document.getElementById("proveedorExcel").value = document.getElementById("id_proveedor").value;
 
         // Envía el formulario oculto para generar Excel
         document.getElementById("formExcel").submit();
     }
-
 
     function mostrarAlertaSiTablaVacia() {
         var tabla = document.querySelector('.table');
@@ -109,14 +117,13 @@
     // Llama a la función al cargar la página
     window.onload = function () {
         mostrarAlertaSiTablaVacia();
-        habilitarBotonGenerarExcel(false); // Deshabilita el botón al cargar la página
     };
 
     // Función para habilitar o deshabilitar el botón de generar Excel
     function habilitarBotonGenerarExcel(habilitar) {
         var botonExcel = document.getElementById("btnGenerarExcel");
-        botonExcel.disabled = !habilitar;
+        if (botonExcel) {
+            botonExcel.disabled = !habilitar;
+        }
     }
 </script>
-
-
