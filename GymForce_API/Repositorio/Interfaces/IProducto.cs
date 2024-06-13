@@ -11,6 +11,6 @@ namespace GymForce_API.Repositorio.Interfaces
         string modificaProducto(ProductoO objP);
 
         //PARA REPORTE
-        IEnumerable<Producto> reporteProducto(string nombre = null, int? categoria = null, int? stock = null);
+        IEnumerable<Producto> reporteProducto(string nombre = null, int? categoria = null, int? stock = null, int? proveedor = null);
 }
 }
